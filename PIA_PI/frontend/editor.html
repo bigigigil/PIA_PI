@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Mundial 2026 - AR Experience</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+
+
+    <div class="container py-3 h-100 d-flex flex-column">
+        <div class="d-flex justify-content-between mb-3">
+            <button class="btn btn-outline-secondary" onclick="history.back()">Cancelar</button>
+            <button class="btn btn-primary" onclick="alert('Descargando...')">Descargar ⬇</button>
+        </div>
+
+        <div
+            class="flex-grow-1 bg-black rounded d-flex align-items-center justify-content-center mb-4 overflow-hidden shadow">
+            <video id="previewVideo" src="assets/video_demo.mp4" controls
+                style="max-width: 100%; max-height: 400px;"></video>
+        </div>
+
+        <div class="card bg-dark text-white">
+            <div class="card-body">
+                <p class="small text-center mb-2">APLICAR FILTRO</p>
+                <div class="row g-2">
+                    <div class="col-3">
+                        <button class="btn btn-outline-light w-100 py-3" onclick="applyFilter('none')">Normal</button>
+                    </div>
+                    <div class="col-3">
+                        <button class="btn btn-warning w-100 py-3 text-dark"
+                            onclick="applyFilter('sepia(100%)')">Sepia</button>
+                    </div>
+                    <div class="col-3">
+                        <button class="btn btn-light w-100 py-3 text-dark"
+                            onclick="applyFilter('grayscale(100%)')">B&N</button>
+                    </div>
+                    <div class="col-3">
+                        <button class="btn btn-danger w-100 py-3"
+                            onclick="applyFilter('hue-rotate(90deg)')">Neon</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function applyFilter(filterType) {
+            document.getElementById('previewVideo').style.filter = filterType;
+        }
+    </script>
+
+</body>
+
+</html>

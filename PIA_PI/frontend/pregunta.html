@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Mundial 2026 - AR Experience</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+
+<body class="bg-light"> <div class="app-wrapper justify-content-center"> <div class="text-center mb-5 fade-in-up">
+
+    <div class="container py-5">
+        <button class="btn btn-outline-secondary mb-4" onclick="location.href='index.html'">⬅ Inicio</button>
+
+        <div class="card text-center shadow">
+            
+             <h3 class="fw-bold">Pregunta del Día</h3>
+            <div class="card-body">
+                <h4 class="card-title mb-4">¿Cuándo es el cumpleaños del bicho?</h4>
+                <div class="d-grid gap-3 mt-4">
+                    <button class="glass-card text-start py-3 px-4 border-0 w-100 d-flex align-items-center"
+                        onclick="checkAnswer(false)">
+                        <span class="badge bg-light text-dark me-3 rounded-circle p-2"
+                            style="width:35px; height:35px;">A&#41;</span>
+                        <span class="fw-bold fs-5">30 de febrero</span>
+                    </button>
+
+                    <button class="glass-card text-start py-3 px-4 border-0 w-100 d-flex align-items-center"
+                        onclick="checkAnswer(true)">
+                        <span class="badge bg-warning text-dark me-3 rounded-circle p-2"
+                            style="width:35px; height:35px;">B&#41;</span>
+                        <span class="fw-bold fs-5">Mañana</span>
+                    </button>
+                    <button class="glass-card text-start py-3 px-4 border-0 w-100 d-flex align-items-center"
+                        onclick="checkAnswer(true)">
+                        <span class="badge bg-warning text-dark me-3 rounded-circle p-2"
+                            style="width:35px; height:35px;">C&#41;</span>
+                        <span class="fw-bold fs-5">Depende</span>
+                    </button>
+
+                    <button class="glass-card text-start py-3 px-4 border-0 w-100 d-flex align-items-center"
+                        onclick="checkAnswer(false)">
+                        <span class="badge bg-light text-dark me-3 rounded-circle p-2"
+                            style="width:35px; height:35px;">D&#41;</span>
+                        <span class="fw-bold fs-5">Todas las anteriores</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="resultModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="modalLabel">Resultado</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <h1 id="modalIcon" class="display-1"></h1>
+                    <p id="modalText" class="fs-4"></p>
+                </div>
+                <div class="modal-footer justify-content-center border-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function checkAnswer(isCorrect) {
+            const modal = new bootstrap.Modal(document.getElementById('resultModal'));
+            document.getElementById('modalIcon').innerText = isCorrect ? 'ᕙ(•̀ ᗜ •́  )!!' : '˙◠˙';
+            document.getElementById('modalText').innerText = isCorrect ? '¡Correcto!' : 'Intenta de nuevo';
+            modal.show();
+        }
+    </script>
+
+
+</body>
+
+</html>
