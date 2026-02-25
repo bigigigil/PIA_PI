@@ -1,0 +1,71 @@
+ .prebunta-grid {
+     display: grid;
+     grid-template-columns: 1fr 1fr;
+     gap: 15px;
+     margin-top: 20px;
+ }
+
+ .btn-prebunta {
+     border: none;
+     border-radius: 15px;
+     color: white;
+     font-weight: 900;
+     font-size: 1.1rem;
+     padding: 30px 10px;
+     text-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+     box-shadow: 0 6px 0 rgba(0, 0, 0, 0.2);
+     transition: transform 0.1s, box-shadow 0.1s;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     text-transform: uppercase;
+     position: relative;
+     overflow: hidden;
+ }
+
+ .btn-prebunta:active {
+     transform: translateY(4px);
+     box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+ }
+
+ .k-red {
+     background-color: var(--rosa);
+ }
+
+ .k-blue {
+     background-color: var(--azul);
+ }
+
+ .k-yellow {
+     background-color: var(--dorado);
+ }
+
+ .k-green {
+     background-color: var(--aguacate);
+ }
+
+ .btn-prebunta i {
+     position: absolute;
+     opacity: 0.3;
+     font-size: 3rem;
+     left: 10px;
+     top: 50%;
+     transform: translateY(-50%);
+ }
+
+ .clue-box {
+     background: white;
+     border-radius: 20px;
+     padding: 30px;
+     min-height: 200px;
+     display: flex;
+     flex-direction: column;
+     justify-content: center;
+     align-items: center;
+     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+ }
+
+ #modalIcon {
+     font-size: 2rem;
+     margin-bottom: 15px;
+ }
