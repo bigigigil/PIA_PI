@@ -1,38 +1,179 @@
-<script src="js/datos.js"></script> 
+<!DOCTYPE html>
+<html lang="es">
 
-<script>
-    window.onload = function() {
+<head>
+    <title>Detalle AR - Mundial 2026</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
-        const params = new URLSearchParams(window.location.search);
-        const paisID = params.get('id');
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/style.css">
 
-        const data = infoPaises[paisID];
+    <script src="js/datos.js"></script>
 
-        if (data) {
-            // 3. Rellenar el HTML con los datos
-            document.querySelector('h1').innerText = `${data.nombre} ${data.bandera}`;
-            document.querySelector('.badge').innerText = data.clasificado;
-            
-            // Actualizar tabla de stats (ejemplo simple)
-            const filas = document.querySelectorAll('tbody tr td:last-child');
-            if(filas.length > 0) {
-                filas[0].innerText = data.stats.jugados;
-                filas[1].innerText = data.stats.goles;
-                filas[2].innerText = data.stats.pos;
-            }
-
-            // 4. Cargar el modelo 3D correcto
-            const modeloEntity = document.querySelector('[gltf-model]');
-            if (modeloEntity) {
-                // Removemos el atributo primero para forzar la recarga
-                modeloEntity.removeAttribute('gltf-model');
-                setTimeout(() => {
-                    modeloEntity.setAttribute('gltf-model', data.modelo);
-                }, 100);
-            }
-        } else {
-            alert("País no encontrado, cargando México por defecto.");
+    <style>
+        /* FONDO: Video de la Cámara Real */
+        #camera-feed {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            border-radius: 20px;
+            filter: brightness(0.9);
         }
-    };
-</script>
+
+        /* FRENTE: Escena 3D Transparente */
+        a-scene {
+            z-index: 1;
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+
+    <div class="app-wrapper">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <button class="btn btn-light rounded-circle shadow-sm" onclick="location.href='buscar.html'" style="width: 40px; height: 40px;">
+                <i class="bi bi-arrow-left"></i>
+            </button>
+            <h4 class="text-white fw-bold m-0 text-shadow">DETALLE</h4>
+            <div style="width: 40px;"></div>
+        </div>
+
+        <div class="glass-card text-center w-100 mb-4 fade-in-up">
+            <h1 class="fw-black text-primary mb-0" id="nombrePais">CARGANDO...</h1>
+            <span class="badge bg-success" id="badgeClasificado">...</span>
+        </div>
+
+        <div class="ratio ratio-1x1 bg-dark rounded-4 shadow mb-4 w-100 position-relative overflow-hidden fade-in-up delay-1">
+            
+            <video id="camera-feed" autoplay playsinline muted></video>
+
+            <a-scene embedded vr-mode-ui="enabled: false" renderer="alpha: true">
+                
+                <a-assets timeout="10000">
+                    <a-asset-item id="modeloGenerico" src="assets/models/huevito.glb"></a-asset-item>
+                </a-assets>
+
+                <a-entity camera look-controls position="0 1.6 0"></a-entity>
+
+                <a-entity id="grupoModelo" position="0 0 -4">
+                    
+                    <a-entity id="entidadModelo" 
+                              position="0 -1 0" 
+                              scale="0.5 0.5 0.5" 
+                              rotation="0 25 0" 
+                              animation-mixer>
+                    </a-entity>
+
+                    <a-entity id="letreroFlotante" position="0 2.3 0" visible="false">
+                        <a-box width="2.5" height="0.6" depth="0.1" color="#004aad" 
+                               material="opacity: 0.8; transparent: true; metallic: 0.8;">
+                        </a-box>
+                        <a-text id="textoLetrero" 
+                                value="PAIS" 
+                                align="center" 
+                                position="0 0 0.06" 
+                                width="5" 
+                                color="white"
+                                font="exo2bold">
+                        </a-text>
+                    </a-entity>
+
+                </a-entity>
+
+                <a-light type="ambient" intensity="1"></a-light>
+                <a-light type="directional" position="1 4 2" intensity="1.2"></a-light>
+
+            </a-scene>
+        </div>
+
+        <div class="glass-card w-100 fade-in-up delay-2 mb-5">
+            <h5 class="text-azul fw-bold mb-3">ESTADÍSTICAS</h5>
+            <p class="text-muted small" id="descPais">...</p>
+            <div class="d-flex justify-content-between border-bottom py-2">
+                <span>Jugados</span> <strong id="statJugados">-</strong>
+            </div>
+            <div class="d-flex justify-content-between border-bottom py-2">
+                <span>Goles</span> <strong id="statGoles">-</strong>
+            </div>
+            <div class="d-flex justify-content-between py-2">
+                <span>Posición</span> <strong id="statPos" class="text-success">-</strong>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="bottom-nav fade-in-up delay-3">
+        <a href="index.html" class="nav-item-link"><i class="bi bi-house-door-fill"></i></a>
+        <a href="buscar.html">
+            <div class="camera-btn-container"><i class="bi bi-qr-code-scan"></i></div>
+        </a>
+        <a href="clips.html" class="nav-item-link"><i class="bi bi-play-circle-fill"></i></a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // 1. Activar la cámara trasera
+        async function startCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: "environment" } 
+                });
+                const video = document.getElementById('camera-feed');
+                video.srcObject = stream;
+            } catch (err) {
+                console.error("Error cámara:", err);
+                document.getElementById('camera-feed').style.background = "#222"; // Fondo gris si falla
+            }
+        }
+
+        // 2. Lógica Principal
+        window.onload = function () {
+            startCamera();
+
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            const data = infoPaises[decodeURIComponent(id)];
+
+            if (data) {
+                // Llenar Textos
+                document.getElementById('nombrePais').innerText = `${data.nombre} ${data.bandera}`;
+                document.getElementById('badgeClasificado').innerText = data.clasificado;
+                document.getElementById('descPais').innerText = data.descripcion;
+                document.getElementById('statJugados').innerText = data.stats.jugados;
+                document.getElementById('statGoles').innerText = data.stats.goles;
+                document.getElementById('statPos').innerText = data.stats.pos;
+
+                // Referencias 3D
+                const entidad = document.getElementById('entidadModelo');
+                const letrero = document.getElementById('letreroFlotante');
+                const textoLetrero = document.getElementById('textoLetrero');
+
+                if (id === 'mexico') {
+                    // Cargar modelo especial México
+                    entidad.setAttribute('gltf-model', 'assets/models/huevito_mexico.glb');
+                    letrero.setAttribute('visible', 'false');
+                } else {
+                    // Cargar genérico y cartel
+                    entidad.setAttribute('gltf-model', 'assets/models/huevito.glb');
+                    letrero.setAttribute('visible', 'true');
+                    textoLetrero.setAttribute('value', data.nombre);
+                }
+            } else {
+                document.getElementById('nombrePais').innerText = "PAÍS NO ENCONTRADO";
+            }
+        };
+    </script>
+
+</body>
+</html>
