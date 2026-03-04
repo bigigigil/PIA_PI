@@ -1,52 +1,38 @@
-<!DOCTYPE html>
-<html>
+<script src="js/datos.js"></script> 
 
-<head>
-    <title>Mundial 2026 - AR Experience</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
+<script>
+    window.onload = function() {
 
-    <link rel="stylesheet" href="css/style.css">
-    
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-</head>
-
-<body>
-    <div class="app-wrapper">
-        <div class="w-100 d-flex justify-content-between align-items-center mb-4">
-            <button class="btn btn-light rounded-circle shadow-sm" onclick="history.back()"
-                style="width: 40px; height: 40px;">
-                <i class="bi bi-arrow-left"></i>
-            </button>
-            <h4 class="text-white fw-bold m-0 text-shadow">DETALLE</h4>
-            <div style="width: 40px;"></div>
-        </div>
-
-        <div class="glass-card text-center w-100 mb-4 fade-in-up">
-            <h1 class="fw-black text-primary mb-0">MÉXICO</h1>
-            <span class="badge bg-success">Clasificado</span>
-        </div>
-
-        <div
-            class="ratio ratio-1x1 bg-dark rounded-4 shadow mb-4 w-100 position-relative overflow-hidden fade-in-up delay-1">
-            <a-scene>
-                <a-assets>
-                    <a-asset-item id="modeloPais" src="assets/models/huevito_mexico.glb"></a-asset-item>
-                </a-assets>
+        const params = new URLSearchParams(window.location.search);
+        const paisID = params.get('id');
 
 
-                <a-entity gltf-model="#modeloPais" position="1 0 -1" scale="0.1 0.1 0.1">
-                </a-entity>
+        const data = infoPaises[paisID];
 
-                <a-light type="ambient" intensity="1"></a-light>
-                <a-light type="directional" position="1 3 2" intensity="0.8"></a-light>
+        if (data) {
+            // 3. Rellenar el HTML con los datos
+            document.querySelector('h1').innerText = `${data.nombre} ${data.bandera}`;
+            document.querySelector('.badge').innerText = data.clasificado;
+            
+            // Actualizar tabla de stats (ejemplo simple)
+            const filas = document.querySelectorAll('tbody tr td:last-child');
+            if(filas.length > 0) {
+                filas[0].innerText = data.stats.jugados;
+                filas[1].innerText = data.stats.goles;
+                filas[2].innerText = data.stats.pos;
+            }
 
-            </a-scene>
-        </div>
-
-
-    </div>
-</body>
-
-</html>
+            // 4. Cargar el modelo 3D correcto
+            const modeloEntity = document.querySelector('[gltf-model]');
+            if (modeloEntity) {
+                // Removemos el atributo primero para forzar la recarga
+                modeloEntity.removeAttribute('gltf-model');
+                setTimeout(() => {
+                    modeloEntity.setAttribute('gltf-model', data.modelo);
+                }, 100);
+            }
+        } else {
+            alert("País no encontrado, cargando México por defecto.");
+        }
+    };
+</script>

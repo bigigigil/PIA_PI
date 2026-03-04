@@ -1,0 +1,19 @@
+body {
+    background-color: #f0f2f5;
+}
+
+.clip-card {
+    max-width: 500px;
+    margin: 0 auto;
+    border-radius: 15px;
+}
+
+.avatar-placeholder {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+}
+
+.ratio-youtube {
+    --bs-aspect-ratio: 56.25%;
+}
