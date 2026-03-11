@@ -126,31 +126,64 @@
             const id = params.get('id');
             const data = infoPaises[decodeURIComponent(id)];
 
-            if (data) {
-                document.getElementById('nombrePais').innerText = `${data.nombre} ${data.bandera}`;
-                document.getElementById('badgeClasificado').innerText = data.clasificado;
-                document.getElementById('descPais').innerText = data.descripcion;
-                document.getElementById('statJugados').innerText = data.stats.jugados;
-                document.getElementById('statGoles').innerText = data.stats.goles;
-                document.getElementById('statPos').innerText = data.stats.pos;
+                if (data) {
+                    document.getElementById('nombrePais').innerText = `${data.nombre} ${data.bandera}`;
+                    document.getElementById('badgeClasificado').innerText = data.clasificado;
+                    document.getElementById('descPais').innerText = data.descripcion;
+                    document.getElementById('statJugados').innerText = data.stats.jugados;
+                    document.getElementById('statGoles').innerText = data.stats.goles;
+                    document.getElementById('statPos').innerText = data.stats.pos;
 
-                const entidad = document.getElementById('entidadModelo');
-                const letrero = document.getElementById('letreroFlotante');
-                const textoLetrero = document.getElementById('textoLetrero');
+                    const entidad = document.getElementById('entidadModelo');
+                    const letrero = document.getElementById('letreroFlotante');
+                    const textoLetrero = document.getElementById('textoLetrero');
 
-                if (id === 'mexico') {
+                    if (id === 'mexico') {
+                        
+                        entidad.setAttribute('gltf-model', 'assets/models/huevito_mexico.glb');
+                        letrero.setAttribute('visible', 'false');
+                    } else if (id === 'colombia') {
+                        
+                        entidad.setAttribute('gltf-model', 'assets/models/huevito_colombia.glb');
+                        letrero.setAttribute('visible', 'false');
+                    }  else if (id === 'corea del sur') {
+                        
+                        entidad.setAttribute('gltf-model', 'assets/models/huevito_corea.glb');
+                        letrero.setAttribute('visible', 'false');
+                    }  else if (id === 'japon') {
+                        
+                        entidad.setAttribute('gltf-model', 'assets/models/huevito_japon.glb');
+                        letrero.setAttribute('visible', 'false');
+                    } else if (id === 'tunez') {
+                        
+                        entidad.setAttribute('gltf-model', 'assets/models/huevito_tunez.glb');
+                        letrero.setAttribute('visible', 'false');
+                    } else if (id === 'sudafrica') {
+                        
+                        entidad.setAttribute('gltf-model', 'assets/models/huevito_sudafrica.glb');
+                        letrero.setAttribute('visible', 'false');
+                    } else if (id === 'uzbekistan') {
+                        
+                        entidad.setAttribute('gltf-model', 'assets/models/huevito_uzbekistan.glb');
+                        letrero.setAttribute('visible', 'false');
+                    } else if (id === 'españa') {
+                        
+                        entidad.setAttribute('gltf-model', 'assets/models/huevito_espania.glb');
+                        letrero.setAttribute('visible', 'false');
+                    }  else if (id === 'uruguay') {
+                        
+                        entidad.setAttribute('gltf-model', 'assets/models/huevito_uruguay.glb');
+                        letrero.setAttribute('visible', 'false');
+                    } 
+                    else {
                     
-                    entidad.setAttribute('gltf-model', 'assets/models/huevito_mexico.glb');
-                    letrero.setAttribute('visible', 'false');
+                        entidad.setAttribute('gltf-model', 'assets/models/huevito.glb');
+                        letrero.setAttribute('visible', 'true');
+                        textoLetrero.setAttribute('value', data.nombre);
+                    }
                 } else {
-                 
-                    entidad.setAttribute('gltf-model', 'assets/models/huevito.glb');
-                    letrero.setAttribute('visible', 'true');
-                    textoLetrero.setAttribute('value', data.nombre);
+                    document.getElementById('nombrePais').innerText = "PAÍS NO ENCONTRADO";
                 }
-            } else {
-                document.getElementById('nombrePais').innerText = "PAÍS NO ENCONTRADO";
-            }
         };
     </script>
 

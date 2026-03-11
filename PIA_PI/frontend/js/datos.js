@@ -11,7 +11,7 @@ const infoPaises = {
         nombre: "SUDÁFRICA",
         bandera: "🇿🇦",
         clasificado: "Clasificado",
-        modelo: "assets/models/huevito.glb",
+        modelo: "assets/models/huevito_sudafrica.glb",
         stats: { jugados: 3, goles: 2, pos: "4°" },
         descripcion: "El equipo africano busca hacer historia en el Mundial."
     },
@@ -19,7 +19,7 @@ const infoPaises = {
         nombre: "COREA DEL SUR",
         bandera: "🇰🇷",
         clasificado: "Clasificado",
-        modelo: "assets/models/huevito.glb",
+        modelo: "assets/models/huevito_corea.glb",
         stats: { jugados: 3, goles: 4, pos: "1°" },
         descripcion: "El equipo asiático busca hacer historia en el Mundial."
     },
@@ -27,7 +27,7 @@ const infoPaises = {
         nombre: "TÚNEZ",
         bandera: "🇹🇳",
         clasificado: "Clasificado",
-        modelo: "assets/models/huevito.glb",
+        modelo: "assets/models/huevito_tunez.glb",
         stats: { jugados: 3, goles: 1, pos: "5°" },
         descripcion: "El equipo árabe busca hacer historia en el Mundial."
     },
@@ -35,7 +35,7 @@ const infoPaises = {
         nombre: "JAPÓN",
         bandera: "🇯🇵",
         clasificado: "Clasificado",
-        modelo: "assets/models/huevito.glb",
+        modelo: "assets/models/huevito_japon.glb",
         stats: { jugados: 3, goles: 3, pos: "3°" },
         descripcion: "El equipo asiático busca hacer historia en el Mundial."
     },
@@ -43,7 +43,7 @@ const infoPaises = {
         nombre: "UZBEKISTÁN",
         bandera: "🇺🇿",
         clasificado: "Clasificado",
-        modelo: "assets/models/huevito.glb",
+        modelo: "assets/models/huevito_uzbekistan.glb",
         stats: { jugados: 3, goles: 0, pos: "6°" },
         descripcion: "El equipo asiático busca hacer historia en el Mundial."
     },
@@ -51,7 +51,7 @@ const infoPaises = {
         nombre: "COLOMBIA",
         bandera: "🇨🇴",
         clasificado: "Clasificado",
-        modelo: "assets/models/huevito.glb",
+        modelo: "assets/models/huevito_colombia.glb",
         stats: { jugados: 3, goles: 2, pos: "4°" },
         descripcion: "El equipo sudamericano busca hacer historia en el Mundial."
     },
@@ -59,7 +59,7 @@ const infoPaises = {
         nombre: "URUGUAY",
         bandera: "🇺🇾",
         clasificado: "Clasificado",
-        modelo: "assets/models/huevito.glb",
+        modelo: "assets/models/huevito_uruguay.glb",
         stats: { jugados: 3, goles: 1, pos: "5°" },
         descripcion: "El equipo sudamericano busca hacer historia en el Mundial."
     },
@@ -67,7 +67,7 @@ const infoPaises = {
         nombre: "ESPAÑA",
         bandera: "🇪🇸",
         clasificado: "Clasificado",
-        modelo: "assets/models/huevito.glb",
+        modelo: "assets/models/huevito_espania.glb",
         stats: { jugados: 3, goles: 3, pos: "2°" },
         descripcion: "El equipo europeo busca hacer historia en el Mundial."
     }
