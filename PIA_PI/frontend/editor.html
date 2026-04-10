@@ -1,60 +1,191 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
-    <title>Mundial 2026 - AR Experience</title>
+    <meta charset="UTF-8">
+    <title>Mundial 2026 - Editor de Clips</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            background-color: #121212;
+            color: white;
+        }
+
+        .video-container {
+            background-color: #000;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        #previewVideo {
+            width: 100%;
+            height: auto;
+            max-height: 450px;
+            object-fit: cover;
+            transition: filter 0.4s ease-in-out;
+            /* Transición suave entre filtros */
+        }
+
+        .filter-btn {
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        /* Contenedor del Toast para el feedback visual */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1055;
+        }
+    </style>
 </head>
 
 <body>
 
+    <svg style="display: none;">
+        <defs>
+            <filter id="thermal">
+                <feColorMatrix type="matrix"
+                    values="0.33 0.33 0.33 0 0  0.33 0.33 0.33 0 0  0.33 0.33 0.33 0 0  0 0 0 1 0" result="gray" />
+                <feComponentTransfer in="gray">
+                    <feFuncR type="table" tableValues="0 0 1 1" />
+                    <feFuncG type="table" tableValues="0 0 0 1" />
+                    <feFuncB type="table" tableValues="1 0 0 0" />
+                </feComponentTransfer>
+            </filter>
 
+            <filter id="pixelate" x="0" y="0">
+                <feFlood x="4" y="4" height="2" width="2" />
+                <feComposite width="8" height="8" />
+                <feTile result="a" />
+                <feComposite in="SourceGraphic" in2="a" operator="in" />
+                <feMorphology operator="dilate" radius="3" />
+            </filter>
+        </defs>
+    </svg>
 
-    <div class="container py-3 h-100 d-flex flex-column">
-        <div class="d-flex justify-content-between mb-3">
-            <button class="btn btn-outline-secondary" onclick="history.back()">Cancelar</button>
-            <button class="btn btn-primary" onclick="alert('Descargando...')">Descargar ⬇</button>
+    <audio id="clickSound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"
+        preload="auto"></audio>
+
+    <div class="container py-4 h-100 d-flex flex-column">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <button class="btn btn-outline-light rounded-circle" onclick="history.back()">
+                <i class="bi bi-arrow-left"></i>
+            </button>
+            <h5 class="m-0 fw-bold">Estudio Mundialista</h5>
+            <button class="btn btn-success rounded-pill fw-bold" onclick="guardarVideo()">
+                <i class="bi bi-download"></i> Guardar
+            </button>
         </div>
 
-        <div
-            class="flex-grow-1 bg-black rounded d-flex align-items-center justify-content-center mb-4 overflow-hidden shadow">
-            <video id="previewVideo" src="assets/video_demo.mp4" controls
-                style="max-width: 100%; max-height: 400px;"></video>
+        <div class="video-container d-flex align-items-center justify-content-center mb-4">
+            <video id="previewVideo" controls autoplay loop playsinline>
+                <source src="assets/clips/prueba.mp4" type="video/mp4">
+                navegadpr no compatible :c
+            </video>
         </div>
 
-        <div class="card bg-dark text-white">
+        <div class="card bg-dark text-white border-secondary">
             <div class="card-body">
-                <p class="small text-center mb-2">APLICAR FILTRO</p>
+                <p class="small text-center mb-3 text-uppercase fw-bold text-muted">Aplica Filtros al Video</p>
+
                 <div class="row g-2">
-                    <div class="col-3">
-                        <button class="btn btn-outline-light w-100 py-3" onclick="applyFilter('none')">Normal</button>
+                    <div class="col-4">
+                        <button class="btn btn-primary filter-btn w-100 py-2 active"
+                            onclick="applyFilter(this, 'Normal', 'none')">
+                            <i class="bi bi-camera-video"></i><br>Normal
+                        </button>
                     </div>
-                    <div class="col-3">
-                        <button class="btn btn-warning w-100 py-3 text-dark"
-                            onclick="applyFilter('sepia(100%)')">Sepia</button>
+                    <div class="col-4">
+                        <button class="btn btn-outline-light filter-btn w-100 py-2"
+                            onclick="applyFilter(this, 'Desenfoque', 'blur(6px)')">
+                            <i class="bi bi-droplet"></i><br>Desenfoque
+                        </button>
                     </div>
-                    <div class="col-3">
-                        <button class="btn btn-light w-100 py-3 text-dark"
-                            onclick="applyFilter('grayscale(100%)')">B&N</button>
+                    <div class="col-4">
+                        <button class="btn btn-outline-light filter-btn w-100 py-2"
+                            onclick="applyFilter(this, 'Alta Saturación', 'saturate(300%)')">
+                            <i class="bi bi-brightness-high"></i><br>Saturado
+                        </button>
                     </div>
-                    <div class="col-3">
-                        <button class="btn btn-danger w-100 py-3"
-                            onclick="applyFilter('hue-rotate(90deg)')">Neon</button>
+                    <div class="col-4">
+                        <button class="btn btn-outline-light filter-btn w-100 py-2"
+                            onclick="applyFilter(this, 'Tonalidad', 'hue-rotate(120deg)')">
+                            <i class="bi bi-palette"></i><br>Ajuste Color
+                        </button>
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-outline-light filter-btn w-100 py-2"
+                            onclick="applyFilter(this, 'Tonos Pastel', 'contrast(80%) brightness(120%) saturate(60%)')">
+                            <i class="bi bi-flower1"></i><br>Pastel
+                        </button>
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-outline-light filter-btn w-100 py-2"
+                            onclick="applyFilter(this, 'Cámara Térmica', 'url(#thermal)')">
+                            <i class="bi bi-thermometer-sun"></i><br>Térmica
+                        </button>
+                    </div>
+                    <div class="col-12 mt-2">
+                        <button class="btn btn-outline-light filter-btn w-100 py-2"
+                            onclick="applyFilter(this, 'Pixelado', 'url(#pixelate)')">
+                            <i class="bi bi-grid-3x3"></i> Modo Retro (Pixelado)
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <div class="toast-container">
+        <div id="feedbackToast" class="toast align-items-center text-white bg-success border-0" role="alert"
+            aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body fw-bold" id="toastMessage">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        function applyFilter(filterType) {
-            document.getElementById('previewVideo').style.filter = filterType;
+
+        const toastEl = document.getElementById('feedbackToast');
+        const feedbackToast = new bootstrap.Toast(toastEl, { delay: 1500 });
+        const clickAudio = document.getElementById('clickSound');
+
+        function applyFilter(btnElement, filterName, filterCss) {
+
+            clickAudio.currentTime = 0;
+            clickAudio.play().catch(e => console.log("Audio bloqueado por navegador", e));
+
+            document.getElementById('previewVideo').style.filter = filterCss;
+
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('btn-primary', 'active');
+                btn.classList.add('btn-outline-light');
+            });
+            btnElement.classList.remove('btn-outline-light');
+            btnElement.classList.add('btn-primary', 'active');
+
+            document.getElementById('toastMessage').innerHTML = `<i class="bi bi-check-circle-fill me-2"></i> ${filterName} aplicado`;
+            feedbackToast.show();
+        }
+
+        function guardarVideo() {
+            clickAudio.play();
+            document.getElementById('toastMessage').innerHTML = `<i class="bi bi-cloud-arrow-down-fill me-2"></i> Procesando y guardando...`;
+            feedbackToast.show();
         }
     </script>
-
 </body>
 
 </html>

@@ -48,10 +48,11 @@ function cargarPreguntaAleatoria() {
     const objetoPregunta = dbPaises[indiceCorrecto];
     respuestaActual = objetoPregunta.pais;
 
-    const questionElement = document.getElementById('questionText');
-    if (questionElement) {
-        questionElement.innerHTML = objetoPregunta.pistas.join('<br><br>');
-    }
+ const questionElement = document.getElementById('questionText');
+if (questionElement) {
+    const indicePista = Math.floor(Math.random() * objetoPregunta.pistas.length);
+    questionElement.innerHTML = objetoPregunta.pistas[indicePista];
+}
 
     let otrosPaises = dbPaises.filter(item => item.pais !== respuestaActual);
 
