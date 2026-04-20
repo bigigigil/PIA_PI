@@ -156,17 +156,29 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
     <script>
+        window.addEventListener('DOMContentLoaded', (event) => {
+            const params = new URLSearchParams(window.location.search);
+            const videoURL = params.get('video');
+            if (videoURL) {
+                const reproductorEditor = document.getElementById('previewVideo');
+                reproductorEditor.src = videoURL;
+                reproductorEditor.load();
+            }
+        });
 
         const toastEl = document.getElementById('feedbackToast');
-        const feedbackToast = new bootstrap.Toast(toastEl, { delay: 1500 });
+        const feedbackToast = new bootstrap.Toast(toastEl, { delay: 3000 }); // Aumenté el delay a 3s para mensajes largos
         const clickAudio = document.getElementById('clickSound');
 
-        function applyFilter(btnElement, filterName, filterCss) {
+        let filtroActual = 'none';
 
+        function applyFilter(btnElement, filterName, filterCss) {
             clickAudio.currentTime = 0;
             clickAudio.play().catch(e => console.log("Audio bloqueado por navegador", e));
 
+            filtroActual = filterCss;
             document.getElementById('previewVideo').style.filter = filterCss;
 
             document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -180,11 +192,92 @@
             feedbackToast.show();
         }
 
-        function guardarVideo() {
+ 
+        async function guardarVideo() {
+            const btnGuardar = document.querySelector("button[onclick='guardarVideo()']");
+            if (btnGuardar.disabled) return; 
+            btnGuardar.disabled = true;
+
             clickAudio.play();
-            document.getElementById('toastMessage').innerHTML = `<i class="bi bi-cloud-arrow-down-fill me-2"></i> Procesando y guardando...`;
+            const video = document.getElementById('previewVideo');
+
+            const teniaLoop = video.loop;
+            video.loop = false;
+
+            document.getElementById('toastMessage').innerHTML = `<i class="bi bi-record-circle-fill text-danger me-2"></i> Grabando filtro (Tardará lo que dure el video)...`;
             feedbackToast.show();
+
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth || 640;
+            canvas.height = video.videoHeight || 360;
+            const ctx = canvas.getContext('2d');
+
+            const stream = canvas.captureStream(30);
+
+            try {
+                const videoStream = video.captureStream ? video.captureStream() : video.mozCaptureStream();
+                const audioTracks = videoStream.getAudioTracks();
+                if (audioTracks.length > 0) {
+                    stream.addTrack(audioTracks[0]);
+                }
+            } catch (e) {
+                console.log("No se pudo capturar el audio en este navegador.");
+            }
+
+            const mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+            const recordedChunks = [];
+
+            mediaRecorder.ondataavailable = e => {
+                if (e.data.size > 0) recordedChunks.push(e.data);
+            };
+
+            mediaRecorder.onstop = () => {
+                const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'Mundial_Editado.webm';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                document.getElementById('toastMessage').innerHTML = `<i class="bi bi-check-circle-fill me-2"></i> ¡Video guardado con éxito!`;
+                feedbackToast.show();
+
+                video.loop = teniaLoop;
+                btnGuardar.disabled = false;
+                video.play();
+            };
+
+            video.pause();
+            video.currentTime = 0;
+            
+            function drawFrame() {
+                if (video.paused || video.ended) return; 
+                
+                ctx.filter = filtroActual;
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                requestAnimationFrame(drawFrame);
+            }
+
+            video.addEventListener('play', () => {
+                if (mediaRecorder.state === 'inactive') {
+                    mediaRecorder.start();
+                    drawFrame();
+                }
+            }, { once: true });
+
+            video.addEventListener('ended', () => {
+                if (mediaRecorder.state === 'recording') {
+                    mediaRecorder.stop();
+                }
+            }, { once: true });
+
+            setTimeout(() => video.play(), 300);
         }
+    
     </script>
 </body>
 
