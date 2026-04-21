@@ -1,7 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
 
 :root {
-    --azul: rgba(0, 77, 229);
+    --azul: rgba(0, 76, 229, 0.5);
+    --dorado: rgba(218, 171, 0, 0.5);
+    --aguacate: rgba(176, 208, 101, 0.5);
+    --lima: rgba(204, 220, 0, 0.5);
+    --verde: rgba(101, 208, 152, 0.5);
+    --rosa: rgba(219, 0, 122, 0.5);
+    --fondo-gradiente: linear-gradient(360deg, rgba(176, 208, 101), rgba(101, 208, 152), rgba(0, 77, 229));
+    --glass-bg: rgba(255, 255, 255, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.4);
+    --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+/*
+
+  --azul: rgba(0, 77, 229);
     --dorado: rgba(218, 170, 0);
     --aguacate: rgba(176, 208, 101);
     --lima: rgba(204, 220, 0);
@@ -11,8 +24,8 @@
     --glass-bg: rgba(255, 255, 255, 0.85);
     --glass-border: rgba(255, 255, 255, 0.4);
     --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-}
 
+*/
 
 
 body {

@@ -7,7 +7,6 @@
 
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -22,12 +21,12 @@
     <div class="app-wrapper">
 
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <button class="btn btn-light rounded-circle shadow-sm" onclick="location.href='buscar.html'" style="width: 40px; height: 40px;">
+            <button class="btn btn-light rounded-circle shadow-sm" onclick="location.href='buscar.html'"
+                style="width: 40px; height: 40px;">
                 <i class="bi bi-arrow-left"></i>
             </button>
             <h4 class="text-white fw-bold m-0 text-shadow">DETALLE</h4>
             <div style="width: 40px;"></div>
-             
         </div>
 
         <div class="glass-card text-center w-100 mb-4 fade-in-up">
@@ -35,44 +34,63 @@
             <span class="badge bg-success" id="badgeClasificado">...</span>
         </div>
 
-        <div class="ratio ratio-1x1 bg-dark rounded-4 shadow mb-4 w-100 position-relative overflow-hidden fade-in-up delay-1">
-            
+        <div
+            class="ratio ratio-1x1 bg-dark rounded-4 shadow mb-4 w-100 position-relative overflow-hidden fade-in-up delay-1">
+
             <video id="camera-feed" autoplay playsinline muted></video>
 
             <a-scene embedded vr-mode-ui="enabled: false" renderer="alpha: true">
-                
+
                 <a-assets timeout="10000">
                     <a-asset-item id="modeloGenerico" src="assets/models/huevito.glb"></a-asset-item>
                 </a-assets>
-<button id="btnBrincar" class="btn btn-warning rounded-pill shadow-lg position-absolute fw-bold" 
-                    style="bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 10; border: 2px solid white; padding: 10px 25px;">
-                <i class="bi bi-stars"></i> ¡BRINCAR!
-            </button>
+
                 <a-entity camera look-controls position="0 1.6 0"></a-entity>
 
                 <a-entity id="grupoModelo" position="0 0 -4">
-                    
-                    <a-entity id="entidadModelo" 
-                              position="0 -1 0" 
-                              scale="0.5 0.5 0.5" 
-                              rotation="0 25 0">
+
+                    <a-entity id="entidadModelo" position="0 -1 0" scale="0.5 0.5 0.5" rotation="0 25 0">
                     </a-entity>
 
                     <a-entity id="letreroFlotante" position="0 2.3 0" visible="false">
-                        <a-box width="2.5" height="0.6" depth="0.1" color="#004aad" 
-                               material="opacity: 0.8; transparent: true; metallic: 0.8;">
+                        <a-box width="2.5" height="0.6" depth="0.1" color="#004aad"
+                            material="opacity: 0.8; transparent: true; metallic: 0.8;">
                         </a-box>
-                        <a-text id="textoLetrero" value="PAIS" align="center" position="0 0 0.06" width="5" color="white" font="exo2bold"></a-text>
+                        <a-text id="textoLetrero" value="PAIS" align="center" position="0 0 0.06" width="5"
+                            color="white" font="exo2bold"></a-text>
+                    </a-entity>
+
+                    <a-entity id="efectoBrillos" visible="false"
+                        animation="property: rotation; to: 0 360 0; loop: true; dur: 2500; easing: linear;">
+                        <a-sphere position="1.2 0 0" radius="0.15" color="#00ffcc" material="shader: flat"
+                            animation="property: position; to: 1.2 1 0; dir: alternate; loop: true; dur: 500"></a-sphere>
+                        <a-sphere position="-1.2 0 0" radius="0.1" color="#ff00cc" material="shader: flat"
+                            animation="property: position; to: -1.2 1.5 0; dir: alternate; loop: true; dur: 700"></a-sphere>
+                        <a-sphere position="0 0 1.2" radius="0.15" color="#ffeb3b" material="shader: flat"
+                            animation="property: position; to: 0 1.2 1.2; dir: alternate; loop: true; dur: 600"></a-sphere>
+                        <a-sphere position="0 0 -1.2" radius="0.1" color="#76ff03" material="shader: flat"
+                            animation="property: position; to: 0 0.8 -1.2; dir: alternate; loop: true; dur: 800"></a-sphere>
                     </a-entity>
 
                 </a-entity>
 
                 <a-light type="ambient" intensity="1"></a-light>
                 <a-light type="directional" position="1 4 2" intensity="1.2"></a-light>
-
+                <div class="position-absolute w-100 d-flex justify-content-center gap-2"
+                    style="bottom: 20px; z-index: 10;">
+                    <button id="btnBrincar" class="btn btn-warning rounded-pill shadow-lg fw-bold"
+                        style="border: 2px solid white; padding: 10px 20px;">
+                        <i class="bi bi-stars"></i> BRINCAR
+                    </button>
+                    <button id="btnInfoAudio" class="btn btn-info rounded-pill shadow-lg fw-bold text-white"
+                        style="border: 2px solid white; padding: 10px 20px;">
+                        <i class="bi bi-volume-up-fill"></i> INFO
+                    </button>
+                </div>
             </a-scene>
 
-           
+
+
         </div>
 
         <div class="glass-card w-100 fade-in-up delay-2 mb-5">
@@ -104,14 +122,14 @@
     <script>
         async function startCamera() {
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { facingMode: "environment" } 
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: "environment" }
                 });
                 const video = document.getElementById('camera-feed');
                 video.srcObject = stream;
             } catch (err) {
                 console.error("Error cámara:", err);
-                document.getElementById('camera-feed').style.background = "#222"; 
+                document.getElementById('camera-feed').style.background = "#222";
             }
         }
 
@@ -140,10 +158,10 @@
                 } else if (id === 'colombia') {
                     entidad.setAttribute('gltf-model', 'assets/models/huevito_colombia.glb');
                     letrero.setAttribute('visible', 'false');
-                }  else if (id === 'corea del sur') {
+                } else if (id === 'corea del sur') {
                     entidad.setAttribute('gltf-model', 'assets/models/huevito_corea.glb');
                     letrero.setAttribute('visible', 'false');
-                }  else if (id === 'japon') {
+                } else if (id === 'japon') {
                     entidad.setAttribute('gltf-model', 'assets/models/huevito_japon.glb');
                     letrero.setAttribute('visible', 'false');
                 } else if (id === 'tunez') {
@@ -158,7 +176,7 @@
                 } else if (id === 'españa') {
                     entidad.setAttribute('gltf-model', 'assets/models/huevito_espania.glb');
                     letrero.setAttribute('visible', 'false');
-                }  else if (id === 'uruguay') {
+                } else if (id === 'uruguay') {
                     entidad.setAttribute('gltf-model', 'assets/models/huevito_uruguay.glb');
                     letrero.setAttribute('visible', 'false');
                 } else {
@@ -170,26 +188,54 @@
                 document.getElementById('nombrePais').innerText = "PAÍS NO ENCONTRADO";
             }
         };
-
         
-        document.getElementById('btnBrincar').addEventListener('click', function() {
+        document.getElementById('btnBrincar').addEventListener('click', function () {
             const entidad = document.getElementById('entidadModelo');
-            
+
             entidad.removeAttribute('animation-mixer');
             setTimeout(() => {
-           
                 entidad.setAttribute('animation-mixer', 'clip: *; loop: once; timeScale: 1.2;');
             }, 10);
 
             confetti({
-                particleCount: 120,    
-                spread: 80,            
-                origin: { y: 0.6 },  
-                colors: ['#004aad', '#00c853', '#ffc107', '#e91e63'] 
+                particleCount: 120,
+                spread: 80,
+                origin: { y: 0.6 },
+                colors: ['#004aad', '#00c853', '#ffc107', '#e91e63']
             });
+        });
+
+        document.getElementById('btnInfoAudio').addEventListener('click', function () {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            const data = infoPaises[decodeURIComponent(id)];
+
+            if (!data) return;
+
+            window.speechSynthesis.cancel();
+
+            const textoALeer = `Selección de ${data.nombre}. ${data.clasificado}. Jugados ${data.stats.jugados}. Goles ${data.stats.goles}. Posición ${data.stats.pos}`;
+            const voz = new SpeechSynthesisUtterance(textoALeer);
+            voz.lang = 'es-MX'; 
+            voz.rate = 1.0;     
+            const brillos = document.getElementById('efectoBrillos');
+
+            voz.onstart = function () {
+                brillos.setAttribute('visible', 'true');
+            };
+
+            voz.onend = function () {
+                brillos.setAttribute('visible', 'false');
+            };
+            voz.onerror = function () {
+                brillos.setAttribute('visible', 'false');
+            };
+
+            window.speechSynthesis.speak(voz);
         });
 
     </script>
 
 </body>
+
 </html>
