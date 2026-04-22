@@ -4,52 +4,145 @@
 <head>
     <title>Escáner Mundial 2026</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script
-        src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa9396325428388431527fe4/dist/aframe-master.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa9396325428388431527fe4/dist/aframe-master.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="css/buscar.css">
     <link rel="stylesheet" href="css/style.css">
 
+    <style>
+        .arjs-loader {
+            height: 100%; width: 100%; position: absolute;
+            top: 0; left: 0; 
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(15px);
+            z-index: 9999; display: flex; justify-content: center; align-items: center;
+        }
+        .loader-card {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+            animation: pulse 2s infinite;
+        }
 
+        .scanner-hud {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px; height: 500px;
+            z-index: 5;
+            pointer-events: none; 
+        }
+        .corner {
+            position: absolute; width: 40px; height: 40px;
+            border-color: #00e5ff; border-style: solid;
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
+        }
+        .top-left { top: 0; left: 0; border-width: 4px 0 0 4px; border-radius: 15px 0 0 0; }
+        .top-right { top: 0; right: 0; border-width: 4px 4px 0 0; border-radius: 0 15px 0 0; }
+        .bottom-left { bottom: 0; left: 0; border-width: 0 0 4px 4px; border-radius: 0 0 0 15px; }
+        .bottom-right { bottom: 0; right: 0; border-width: 0 4px 4px 0; border-radius: 0 0 15px 0; }
+        
+        .laser-line {
+            width: 100%; height: 2px;
+            background: #00e5ff;
+            box-shadow: 0 0 15px 3px #00e5ff;
+            position: absolute;
+            animation: scan 2.5s infinite linear alternate;
+        }
+        @keyframes scan {
+            0% { top: 5%; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 95%; opacity: 0; }
+        }
+
+        .success-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px);
+            z-index: 100; display: none; flex-direction: column;
+            justify-content: center; align-items: center;
+        }
+        .zoom-in { animation: zoomIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes zoomIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+    </style>
 </head>
 
-<body style="margin: 0; overflow: hidden;">
+<body style="margin: 0; overflow: hidden; background-color: #000;">
 
     <div class="arjs-loader">
-        <div>Cargando descriptores de imágenes...</div>
+        <div class="loader-card">
+            <div class="spinner-border text-primary mb-3" role="status" style="width: 3rem; height: 3rem;"></div>
+            <h5 class="fw-bold text-dark m-0">Iniciando Escáner...</h5>
+            <small class="text-muted">⏳∘ ∘ ∘ ( °ヮ° ) ?</small>
+        </div>
     </div>
 
-    <div style="position: fixed; top: 20px; width: 100%; text-align: center; z-index: 10;">
-        <div class="glass-card d-inline-block px-4 py-2">
-            <p class="m-0 fw-bold text-azul">Apunta a una bandera</p>
+    <div style="position: fixed; top: 30px; width: 100%; text-align: center; z-index: 10;">
+        <div class="glass-card d-inline-flex align-items-center px-4 py-2 shadow-lg" style="border: 1px solid rgba(255,255,255,0.4);">
+            <div class="spinner-grow spinner-grow-sm text-danger me-2" role="status"></div>
+            <p class="m-0 fw-bold text-dark text-uppercase small">Apunta a una bandera ( -_•) 📽.ᐟ <p>
         </div>
-        <button class="btn btn-light rounded-circle shadow position-absolute top-0 start-0 m-3"
-            onclick="window.location.href='index.html'">
-            ⬅
+        <button class="btn btn-light rounded-circle shadow-lg position-absolute top-0 start-0 ms-3 mt-1"
+            onclick="window.location.href='index.html'" style="width: 45px; height: 45px;">
+            <i class="bi bi-arrow-left fs-5"></i>
         </button>
+    </div>
+
+    <div class="scanner-hud">
+        <div class="corner top-left"></div>
+        <div class="corner top-right"></div>
+        <div class="corner bottom-left"></div>
+        <div class="corner bottom-right"></div>
+        <div class="laser-line"></div>
+    </div>
+
+    <div id="successOverlay" class="success-overlay">
+        <div class="glass-card text-center p-5 zoom-in border-0" style="background: rgba(255,255,255,0.95);">
+            <i class="bi bi-check-circle-fill text-success display-1 mb-3 shadow-sm rounded-circle"></i>
+            <h2 class="text-dark fw-black text-uppercase" id="successText">¡ENCONTRADO!</h2>
+            <div class="progress mt-3" style="height: 5px;">
+                <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width: 100%"></div>
+            </div>
+            <p class="text-muted small mt-3 mb-0">Preparando modelo 3D...</p>
+        </div>
     </div>
 
     <a-scene vr-mode-ui="enabled: false;" renderer="logarithmicDepthBuffer: true;" embedded
         arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;">
 
         <a-nft type="nft" url="./assets/markers/mexico/bandera_mexico" smooth="true" id="marker-mexico"></a-nft>
-        <a-nft type="nft" url="./assets/markers/sudafrica/bandera_sudafrica" smooth="true"
-            id="marker-sudafrica"></a-nft>
+        <a-nft type="nft" url="./assets/markers/sudafrica/bandera_sudafrica" smooth="true" id="marker-sudafrica"></a-nft>
         <a-nft type="nft" url="./assets/markers/japon/bandera_japon" smooth="true" id="marker-japon"></a-nft>
-        <a-nft type="nft" url="./assets/markers/coreadelsur/bandera_coreadelsur" smooth="true"
-            id="marker-corea-del-sur"></a-nft>
+        <a-nft type="nft" url="./assets/markers/coreadelsur/bandera_coreadelsur" smooth="true" id="marker-corea-del-sur"></a-nft>
         <a-nft type="nft" url="./assets/markers/colombia/bandera_colombia" smooth="true" id="marker-colombia"></a-nft>
         <a-nft type="nft" url="./assets/markers/uruguay/bandera_uruguay" smooth="true" id="marker-uruguay"></a-nft>
         <a-nft type="nft" url="./assets/markers/espania/bandera_espania" smooth="true" id="marker-españa"></a-nft>
         <a-nft type="nft" url="./assets/markers/tunez/bandera_tunez" smooth="true" id="marker-tunez"></a-nft>
-        <a-nft type="nft" url="./assets/markers/uzbekistan/bandera_uzbekistan" smooth="true"
-            id="marker-uzbekistan"></a-nft>
-
+        <a-nft type="nft" url="./assets/markers/uzbekistan/bandera_uzbekistan" smooth="true" id="marker-uzbekistan"></a-nft>
 
         <a-entity camera></a-entity>
     </a-scene>
+
+    <div class="bottom-nav fade-in-up delay-3" style="z-index: 10;">
+        <a href="index.html" class="nav-item-link">
+            <i class="bi bi-house-door-fill"></i>
+        </a>
+        <a href="buscar.html">
+            <div class="camera-btn-container shadow-lg">
+                <i class="bi bi-qr-code-scan"></i>
+            </div>
+        </a>
+        <a href="clips.html" class="nav-item-link">
+            <i class="bi bi-play-circle-fill"></i>
+        </a>
+    </div>
 
     <script>
         let detectionMade = false;
@@ -65,22 +158,30 @@
             { id: 'marker-tunez', key: 'tunez' },
             { id: 'marker-uzbekistan', key: 'uzbekistan' }
         ];
+
         marcadores.forEach(item => {
             const el = document.querySelector(`#${item.id}`);
             if (el) {
                 el.addEventListener('markerFound', () => {
                     if (!detectionMade) {
                         detectionMade = true;
-                        console.log(`Encontrado: ${item.key}`);
-                        if (navigator.vibrate) navigator.vibrate(200);
-                        alert(`¡${item.key.toUpperCase()} DETECTADO! ദ്ദി(˵ •̀ ᴗ - ˵ ) ✧`);
+ 
+                        if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
 
-                        window.location.href = `pais.html?id=${encodeURIComponent(item.key)}`;
+                        document.querySelector('.scanner-hud').style.display = 'none';
+
+                        const overlay = document.getElementById('successOverlay');
+                        const text = document.getElementById('successText');
+                        text.innerText = `¡${item.key.toUpperCase()}!`;
+                        overlay.style.display = 'flex';
+
+                        setTimeout(() => {
+                            window.location.href = `pais.html?id=${encodeURIComponent(item.key)}`;
+                        }, 1500);
                     }
                 });
             }
         });
     </script>
 </body>
-
 </html>

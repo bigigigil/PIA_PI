@@ -1,66 +1,148 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 
 <head>
-    <title>Mundial 2026 - AR Experience</title>
+    <title>Mundial 2026 - Inicio</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
     <link rel="stylesheet" href="css/style.css">
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <style>
+      
+        .gif-icon {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            margin-bottom: 15px;
+            filter: drop-shadow(0px 10px 12px rgba(0, 0, 0, 0.2));
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .gif-main {
+            width: 100px;
+            height: 100px;
+        }
+
+        .glass-card:active .gif-icon,
+        .glass-card:hover .gif-icon {
+            transform: scale(1.1) translateY(-8px);
+        }
+
+        .floating-deco {
+            position: absolute;
+            z-index: -1;
+            opacity: 0.6;
+            animation: floatEfect 4s ease-in-out infinite alternate;
+            filter: blur(1px);
+        }
+
+        .deco-1 {
+            top: 5%;
+            left: 10%;
+            font-size: 3rem;
+            animation-delay: 0s;
+        }
+
+        .deco-2 {
+            top: 20%;
+            right: 5%;
+            font-size: 2rem;
+            animation-delay: 1s;
+        }
+
+        .deco-3 {
+            bottom: 25%;
+            left: 5%;
+            font-size: 2.5rem;
+            animation-delay: 2s;
+        }
+
+        @keyframes floatEfect {
+            0% {
+                transform: translateY(0px) rotate(0deg) scale(1);
+            }
+
+            100% {
+                transform: translateY(-20px) rotate(15deg) scale(1.1);
+            }
+        }
+    </style>
 </head>
 
 <body class="bg-light">
-    <div class="app-wrapper justify-content-center">
+
+    <div class="app-wrapper justify-content-center position-relative">
+
+        <div class="floating-deco deco-1"><img src="assets/gifs/baloncito.gif" alt=""></div>
+        <div class="floating-deco deco-2"><img src="assets/gifs/confetti.gif" alt=""></div>
+        <div class="floating-deco deco-3"><img src="assets/gifs/copa.gif" alt=""></div>
+
         <div class="text-center mb-5 fade-in-up">
-            <h1 class="display-3 fw-bold text-white" style="text-shadow: 0 4px 10px rgba(0,0,0,0.2);">2026</h1>
-            <p class="lead text-white fw-bold tracking-wider">BUSCAR</p>
+            <h5 class="display-1 fw-black text-white mb-0"
+                style="text-shadow: 0 5px 15px rgba(0,0,0,0.3); font-style: italic;">Mundial 2026</h5>
+            <p class="h5 text-white fw-bold tracking-wider opacity-75">INICIO</p>
         </div>
 
-        <div class="w-100">
-            <div class="glass-card fade-in-up delay-1 text-center p-4 mb-4" onclick="location.href='buscar.html'"
-                style="cursor: pointer; border-left: 8px solid var(--dorado);">
-                <i class="bi bi-qr-code-scan text-primary display-1 mb-3"></i>
-                <h3 class="fw-bold text-dark">Buscar</h3>
-                <p class="text-muted small mb-0">Apunta a una bandera</p>
+        <div class="w-100 position-relative z-1">
+
+            <div class="glass-card fade-in-up delay-1 text-center p-4 mb-4 shadow-lg"
+                onclick="location.href='buscar.html'"
+                style="cursor: pointer; border-left: 8px solid var(--dorado); background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.6) 100%);">
+
+                <img src="assets/gifs/camara.gif" alt="Escanear" class="gif-icon gif-main">
+                <img src="assets/gifs/bandera.gif" alt="Escanear" class="gif-icon gif-main">
+
+                <h2 class="fw-black text-dark mb-1">Escáner AR</h2>
+                <p class="text-muted small mb-0 fw-bold">Apunta a una bandera para comenzar</p>
             </div>
 
             <div class="row g-3">
                 <div class="col-6">
-                    <div class="glass-card fade-in-up delay-2 text-center h-100 py-4"
-                        onclick="location.href='pregunta.html'">
-                        <i class="bi bi-trophy-fill text-success fs-1 mb-2"></i>
-                        <h6 class="fw-bold text-dark mb-0">Pregunta del Día</h6>
+                    <div class="glass-card fade-in-up delay-2 text-center h-100 py-4 shadow-sm"
+                        onclick="location.href='pregunta.html'" style="cursor: pointer;">
+
+                        <img src="assets/gifs/copa.gif" alt="Trivia" class="gif-icon">
+
+                        <h6 class="fw-bold text-dark mb-0">Trivia</h6><br>
+                        <p class="text-muted small mb-0 fw-bold">¿Qué tanto conoces las selecciones?</p>
+
                     </div>
                 </div>
+
                 <div class="col-6">
-                    <div class="glass-card fade-in-up delay-3 text-center h-100 py-4"
-                        onclick="location.href='clips.html'">
-                        <i class="bi bi-collection-play-fill text-danger fs-1 mb-2"></i>
-                        <h6 class="fw-bold text-dark mb-0">Edición de clips</h6>
+                    <div class="glass-card fade-in-up delay-3 text-center h-100 py-4 shadow-sm"
+                        onclick="location.href='clips.html'" style="cursor: pointer;">
+
+                        <img src="assets/gifs/video.gif" alt="Clips" class="gif-icon">
+
+                        <h6 class="fw-bold text-dark mb-0">Galería</h6><br>
+                        <p class="text-muted small mb-0 fw-bold">Revive momentos épicos del futbol y edita a tu estilo</p>
+
                     </div>
                 </div>
             </div>
         </div>
 
     </div>
-<div class="bottom-nav fade-in-up delay-3">
-    
-    <a href="index.html" class="nav-item-link active">
-        <i class="bi bi-house-door-fill"></i>
-    </a>
 
-    <a href="buscar.html">
-        <div class="camera-btn-container">
-            <i class="bi bi-qr-code-scan"></i>
-        </div>
-    </a>
+    <div class="bottom-nav fade-in-up delay-3">
+        <a href="index.html" class="nav-item-link active">
+            <i class="bi bi-house-door-fill"></i>
+        </a>
 
-    <a href="clips.html" class="nav-item-link">
-        <i class="bi bi-play-circle-fill"></i>
-    </a>
-    
-</div>
+        <a href="buscar.html">
+            <div class="camera-btn-container shadow-lg">
+                <i class="bi bi-qr-code-scan"></i>
+            </div>
+        </a>
+
+        <a href="clips.html" class="nav-item-link">
+            <i class="bi bi-play-circle-fill"></i>
+        </a>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

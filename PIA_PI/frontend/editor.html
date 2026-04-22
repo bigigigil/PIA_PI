@@ -28,7 +28,6 @@
             max-height: 450px;
             object-fit: cover;
             transition: filter 0.4s ease-in-out;
-            /* Transición suave entre filtros */
         }
 
         .filter-btn {
@@ -36,7 +35,6 @@
             transition: all 0.2s;
         }
 
-        /* Contenedor del Toast para el feedback visual */
         .toast-container {
             position: fixed;
             top: 20px;
@@ -80,7 +78,10 @@
             <button class="btn btn-outline-light rounded-circle" onclick="history.back()">
                 <i class="bi bi-arrow-left"></i>
             </button>
-            <h5 class="m-0 fw-bold">Estudio Mundialista</h5>
+           <div class="text-center mb-5 fade-in-up">
+            <h1 class="display-3 fw-bold text-white" style="text-shadow: 0 4px 10px rgba(0,0,0,0.2);">EDITOR</h1>
+            <p class="lead text-white fw-bold tracking-wider">˙✧˖°🎬 ⋆｡˚꩜</p>
+        </div>
             <button class="btn btn-success rounded-pill fw-bold" onclick="guardarVideo()">
                 <i class="bi bi-download"></i> Guardar
             </button>
