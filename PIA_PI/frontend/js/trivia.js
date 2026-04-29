@@ -82,10 +82,8 @@ const dbPaises = [
 ];
 let flashcards = [];
 let currentCardIndex = 0;
-let mostrandoRespuesta = false;
 let respuestaActual = "";
 let indicePreguntaAnterior = -1;
-const studyModal = document.getElementById('studyModal');
 
 function cargarPreguntaAleatoria() {
     let indiceCorrecto;
@@ -146,13 +144,16 @@ function checkAnswer(boton) {
 
 function cargarModoEstudio() {
     const contenedor = document.getElementById("studyList");
+
+    if (!contenedor) return;
+
     contenedor.innerHTML = "";
 
     dbPaises.forEach(paisObj => {
         const item = document.createElement("div");
-        item.className = "list-group-item";
+        item.className = "mb-3";
 
-        const titulo = document.createElement("h5");
+        const titulo = document.createElement("h6");
         titulo.innerText = paisObj.pais;
 
         const lista = document.createElement("ul");
@@ -189,16 +190,6 @@ function generarFlashcards() {
     flashcards.sort(() => Math.random() - 0.5);
 }
 
-function mostrarCard() {
-    const card = flashcards[currentCardIndex];
-    const text = document.getElementById("flashcardText");
-
-    if (mostrandoRespuesta) {
-        text.innerText = card.respuesta;
-    } else {
-        text.innerText = card.pregunta;
-    }
-}
 
 function flipCard() {
     mostrandoRespuesta = !mostrandoRespuesta;
@@ -217,6 +208,7 @@ function prevCard() {
     mostrandoRespuesta = false;
     mostrarCard();
 }
+
 function mostrarCard() {
     const card = flashcards[currentCardIndex];
 
@@ -229,6 +221,10 @@ function mostrarCard() {
     document.querySelector(".flashcard-container").classList.remove("flipped");
 }
 
+function flipCard() {
+    document.querySelector(".flashcard-container").classList.toggle("flipped");
+}
+
 studyModal.addEventListener('show.bs.modal', () => {
     generarFlashcards();
     currentCardIndex = 0;
@@ -236,8 +232,29 @@ studyModal.addEventListener('show.bs.modal', () => {
     mostrarCard();
 });
 
+function mostrarLista() {
+    document.getElementById("studyList").style.display = "block";
+    document.getElementById("flashcardsContainer").style.display = "none";
+}
+
+function mostrarFlashcards() {
+    document.getElementById("studyList").style.display = "none";
+    document.getElementById("flashcardsContainer").style.display = "block";
+}
+
+
+
 window.onload = () => {
+    const studyModal = document.getElementById('studyModal');
+
+    studyModal.addEventListener('show.bs.modal', () => {
+        cargarModoEstudio();
+        generarFlashcards();
+        currentCardIndex = 0;
+        mostrarCard();
+        mostrarLista();
+    });
+
     cargarPreguntaAleatoria();
-    cargarModoEstudio();
-    generarFlashcards();
 };
+
