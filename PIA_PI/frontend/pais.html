@@ -141,7 +141,8 @@
             const data = infoPaises[decodeURIComponent(id)];
 
             if (data) {
-                document.getElementById('nombrePais').innerText = `${data.nombre} ${data.bandera}`;
+
+                document.getElementById('nombrePais').innerHTML = `${data.nombre} <img src="https://flagsapi.com/${data.codigo_bandera}/shiny/64.png" style="width: 45px; vertical-align: text-bottom; margin-left: 8px;">`;
                 document.getElementById('badgeClasificado').innerText = data.clasificado;
                 document.getElementById('descPais').innerText = data.descripcion;
                 document.getElementById('statJugados').innerText = data.stats.jugados;
@@ -188,7 +189,7 @@
                 document.getElementById('nombrePais').innerText = "PAÍS NO ENCONTRADO";
             }
         };
-        
+
         document.getElementById('btnBrincar').addEventListener('click', function () {
             const entidad = document.getElementById('entidadModelo');
 
@@ -216,8 +217,8 @@
 
             const textoALeer = `Selección de ${data.nombre}. ${data.clasificado}. Jugados ${data.stats.jugados}. Goles ${data.stats.goles}. Posición ${data.stats.pos}`;
             const voz = new SpeechSynthesisUtterance(textoALeer);
-            voz.lang = 'es-MX'; 
-            voz.rate = 1.0;     
+            voz.lang = 'es-MX';
+            voz.rate = 1.0;
             const brillos = document.getElementById('efectoBrillos');
 
             voz.onstart = function () {

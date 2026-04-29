@@ -17,3 +17,28 @@ body {
 .ratio-youtube {
     --bs-aspect-ratio: 56.25%;
 }
+
+.filter-scroll {
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 10px;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.filter-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.filter-btn {
+    transition: all 0.2s;
+    font-weight: bold;
+    border: 2px solid transparent;
+}
+
+.filter-btn.active {
+    background-color: var(--azul);
+    color: white;
+    border-color: var(--azul);
+}
