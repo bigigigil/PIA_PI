@@ -1,40 +1,91 @@
 const dbPaises = [
     {
         pais: "Sudáfrica",
-        pistas: ["Llegó a 3 Copas del Mundo.", "Nunca logró superar la fase de grupos."]
+        pistas: [
+            "Llegó a 3 Copas del Mundo.",
+            "Nunca logró superar la fase de grupos.",
+            "Fue anfitrión del Mundial 2010.",
+            "Su estadio más famoso es el Soccer City.",
+            "Su selección es conocida como 'Bafana Bafana'."
+        ]
     },
     {
         pais: "Corea del Sur",
-        pistas: ["Se les conoce como los 'Tigres del Oriente'.", "Llevan desde 1982 clasificando al mundial."]
+        pistas: [
+            "Se les conoce como los 'Tigres del Oriente'.",
+            "Llevan desde 1982 clasificando al mundial.",
+            "Fueron semifinalistas en el Mundial 2002.",
+            "Organizaron el Mundial 2002 junto con Japón.",
+            "Son uno de los equipos más fuertes de Asia."
+        ]
     },
     {
         pais: "Túnez",
-        pistas: ["Ganó la Copa Africana de Naciones en 2004."]
+        pistas: [
+            "Ganó la Copa Africana de Naciones en 2004.",
+            "Su selección es conocida como 'Las Águilas de Cartago'.",
+            "Fue el primer país africano en ganar un partido mundialista (1978).",
+            "Clasifica frecuentemente a la Copa del Mundo.",
+            "Se encuentra al norte de África"
+        ]
     },
     {
         pais: "Japón",
-        pistas: ["Su primer Mundial fue en 1998.", "Fueron finalistas en la Copa Confederaciones de 2001."]
+        pistas: [
+            "Su primer Mundial fue en 1998.",
+            "Fueron finalistas en la Copa Confederaciones de 2001.",
+            "Organizó el Mundial 2002 junto a Corea del Sur.",
+            "Su selección es conocida como los 'Samuráis Azules'.",
+            "Es uno de los equipos más fuertes de Asia."
+        ]
     },
     {
         pais: "Uzbekistán",
-        pistas: ["Se les apoda el 'Gigante Dormido'."]
+        pistas: [
+            "Se les apoda el 'Gigante Dormido'.",
+            "Nunca ha clasificado a un Mundial.",
+            "Pertenece a la Confederación Asiática.",
+            "Su capital es Taskent.",
+            "Ha estado cerca de clasificar en varias eliminatorias."
+        ]
     },
     {
         pais: "Colombia",
-        pistas: ["Son apodados 'Los Cafeteros'."]
+        pistas: [
+            "Son apodados 'Los Cafeteros'.",
+            "Su mejor participación fue en 2014 (cuartos de final).",
+            "James Rodríguez fue goleador del Mundial 2014.",
+            "Su uniforme principal es amarillo.",
+            "Tiene una gran rivalidad con Argentina y Brasil."
+        ]
     },
     {
         pais: "Uruguay",
-        pistas: ["Fue sede de la primera Copa del Mundo.", "Tiene el mejor himno oficial de fútbol."]
+        pistas: [
+            "Fue sede de la primera Copa del Mundo.",
+            "Ganó los Mundiales de 1930 y 1950.",
+            "Protagonizó el famoso 'Maracanazo'.",
+            "Su selección es conocida como 'La Celeste'.",
+            "Tiene más Copas América que muchos países."
+        ]
     },
     {
         pais: "España",
-        pistas: ["Sus jugadores tienen de pasatiempo jugar a las cartas."]
+        pistas: [
+            "Ganó el Mundial en 2010.",
+            "Su apodo es 'La Roja'.",
+            "Dominaron el fútbol entre 2008 y 2012.",
+            "Ganaron la Eurocopa en 2008 y 2012.",
+            "Su estilo de juego es el 'tiki-taka'."
+        ]
     }
 ];
-
+let flashcards = [];
+let currentCardIndex = 0;
+let mostrandoRespuesta = false;
 let respuestaActual = "";
 let indicePreguntaAnterior = -1;
+const studyModal = document.getElementById('studyModal');
 
 function cargarPreguntaAleatoria() {
     let indiceCorrecto;
@@ -48,11 +99,11 @@ function cargarPreguntaAleatoria() {
     const objetoPregunta = dbPaises[indiceCorrecto];
     respuestaActual = objetoPregunta.pais;
 
- const questionElement = document.getElementById('questionText');
-if (questionElement) {
-    const indicePista = Math.floor(Math.random() * objetoPregunta.pistas.length);
-    questionElement.innerHTML = objetoPregunta.pistas[indicePista];
-}
+    const questionElement = document.getElementById('questionText');
+    if (questionElement) {
+        const indicePista = Math.floor(Math.random() * objetoPregunta.pistas.length);
+        questionElement.innerHTML = objetoPregunta.pistas[indicePista];
+    }
 
     let otrosPaises = dbPaises.filter(item => item.pais !== respuestaActual);
 
@@ -93,4 +144,100 @@ function checkAnswer(boton) {
     modal.show();
 }
 
-window.onload = cargarPreguntaAleatoria;
+function cargarModoEstudio() {
+    const contenedor = document.getElementById("studyList");
+    contenedor.innerHTML = "";
+
+    dbPaises.forEach(paisObj => {
+        const item = document.createElement("div");
+        item.className = "list-group-item";
+
+        const titulo = document.createElement("h5");
+        titulo.innerText = paisObj.pais;
+
+        const lista = document.createElement("ul");
+
+        paisObj.pistas.forEach(pista => {
+            const li = document.createElement("li");
+            li.innerText = pista;
+            lista.appendChild(li);
+        });
+
+        item.appendChild(titulo);
+        item.appendChild(lista);
+        contenedor.appendChild(item);
+    });
+}
+
+function toggleEstudio() {
+    const estudio = document.getElementById("studyList");
+    estudio.style.display = (estudio.style.display === "none") ? "block" : "none";
+}
+
+function generarFlashcards() {
+    flashcards = [];
+
+    dbPaises.forEach(paisObj => {
+        paisObj.pistas.forEach(pista => {
+            flashcards.push({
+                pregunta: pista,
+                respuesta: paisObj.pais
+            });
+        });
+    });
+
+    flashcards.sort(() => Math.random() - 0.5);
+}
+
+function mostrarCard() {
+    const card = flashcards[currentCardIndex];
+    const text = document.getElementById("flashcardText");
+
+    if (mostrandoRespuesta) {
+        text.innerText = card.respuesta;
+    } else {
+        text.innerText = card.pregunta;
+    }
+}
+
+function flipCard() {
+    mostrandoRespuesta = !mostrandoRespuesta;
+    mostrarCard();
+}
+
+function nextCard() {
+    currentCardIndex = (currentCardIndex + 1) % flashcards.length;
+    mostrandoRespuesta = false;
+    mostrarCard();
+}
+
+function prevCard() {
+    currentCardIndex =
+        (currentCardIndex - 1 + flashcards.length) % flashcards.length;
+    mostrandoRespuesta = false;
+    mostrarCard();
+}
+function mostrarCard() {
+    const card = flashcards[currentCardIndex];
+
+    document.getElementById("flashcardQuestion").innerText = card.pregunta;
+    document.getElementById("flashcardAnswer").innerText = card.respuesta;
+
+    document.getElementById("cardCounter").innerText =
+        `${currentCardIndex + 1} / ${flashcards.length}`;
+
+    document.querySelector(".flashcard-container").classList.remove("flipped");
+}
+
+studyModal.addEventListener('show.bs.modal', () => {
+    generarFlashcards();
+    currentCardIndex = 0;
+    mostrandoRespuesta = false;
+    mostrarCard();
+});
+
+window.onload = () => {
+    cargarPreguntaAleatoria();
+    cargarModoEstudio();
+    generarFlashcards();
+};
